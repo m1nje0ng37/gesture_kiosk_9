@@ -1,0 +1,37 @@
+.order-completed-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  h2 {
+    font-size: 2em;
+    color: #4CAF50;
+  }
+  
+  h3 {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #4CAF50;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  li {
+    margin: 5px 0;
+  }
+  
+  @media (max-width: 600px) {
+    h2 {
+      font-size: 1.5em;
+    }
+  
+    p, h3, ul {
+      font-size: 1em;
+    }
+  }
+  
