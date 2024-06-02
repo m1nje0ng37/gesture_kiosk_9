@@ -1,13 +1,26 @@
 .order-confirmation-container {
-    text-align: center;
-    padding: 20px;
-  }
-  
-  h2 {
-    font-size: 2em;
-    color: #4CAF50;
-  }
-  
+  width: 90vw;
+  height: 60vw;
+  max-height: 90vh;
+  max-width: 60vh;
+  border: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2em;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  margin-top: 20px;
+}
+
   .confirmation-buttons {
     display: flex;
     flex-direction: column;

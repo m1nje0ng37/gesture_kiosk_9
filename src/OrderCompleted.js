@@ -1,9 +1,16 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { OrderContext } from './OrderContext';
 import './OrderCompleted.css';
 
 function OrderCompleted() {
-  const { order } = useContext(OrderContext);
+  const { order, resetOrder } = useContext(OrderContext);
+  const navigate = useNavigate();
+
+  const goToHome = () => {
+    resetOrder();
+    navigate('/');
+  };
 
   return (
     <div className="order-completed-container">
@@ -14,6 +21,7 @@ function OrderCompleted() {
           <li key={index}>{item}</li>
         ))}
       </ul>
+      <button className="home-button" onClick={goToHome}>처음으로 돌아가기</button>
     </div>
   );
 }
