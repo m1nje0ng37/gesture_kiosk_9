@@ -36,3 +36,35 @@
     transform: rotate(360deg);
   }
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  width: 90vw;
+  height: 60vw;
+  max-height: 90vh;
+  max-width: 60vh;
+  border: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 600px) {
+  #root {
+    width: 100vw;
+    height: 66.67vw; /* Maintain 9:6 ratio */
+    max-height: 100vh;
+    max-width: 75vh; /* Maintain 9:6 ratio */
+  }
+}
+
