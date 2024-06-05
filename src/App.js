@@ -6,6 +6,9 @@ import OrderConfirmation from './OrderConfirmation';
 import OrderCompleted from './OrderCompleted';
 import WebcamCapture from './WebcamCapture';
 
+/**
+ * 애플리케이션의 라우팅 및 웹캠 캡처를 처리하는 메인 컴포넌트입니다.
+ */
 function App() {
   // 웹캠 스트림을 받아서 처리하는 함수
   const handleStream = (stream) => {
@@ -15,7 +18,9 @@ function App() {
 
   return (
     <div>
+      {/* 웹캠 캡처 컴포넌트를 렌더링하고, 스트림 처리 함수를 props로 전달 */}
       <WebcamCapture onStream={handleStream} />
+      {/* 라우트 설정 */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/menu-selection" element={<MenuSelection />} />
