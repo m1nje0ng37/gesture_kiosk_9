@@ -16,33 +16,73 @@ h2 {
 }
 
 .menu-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: center;
+  text-align: center;
+}
+
+.menu-buttons button {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 30px;
+  font-size: 1.2em;
+  border: 1px solid #000;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  color: #000;
+  white-space: nowrap;
+  width: 200px; /* 버튼의 고정 너비를 설정 */
+}
+
+.menu-buttons button .menu-image {
+  max-width: 50px; /* 메뉴 이미지 크기 조정 */
+  height: auto; /* 원본 비율을 유지 */
+  margin-right: 10px;
+}
+
+.menu-buttons button .side-image {
+  max-width: 20px; /* 추가 이미지 크기 조정 */
+  height: auto; /* 원본 비율을 유지 */
+  margin-left: 5px;
+}
+
+.menu-buttons button:hover {
+  background-color: #f0f0f0;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.popup {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-around;
   margin-top: 20px;
 }
 
-button {
-  padding: 10px 20px;
+.popup-buttons button {
+  padding: 10px 15px;
   font-size: 1em;
-  margin: 10px 20px;
-}
-
-@media (max-width: 600px) {
-  .menu-selection-container {
-    width: 100vw;
-    height: 66.67vw; /* Maintain 9:6 ratio */
-    max-height: 100vh;
-    max-width: 75vh; /* Maintain 9:6 ratio */
-  }
-
-  h2 {
-    font-size: 1.5em;
-  }
-
-  button {
-    padding: 10px;
-    font-size: 1em;
-  }
+  margin: 10px;
 }
