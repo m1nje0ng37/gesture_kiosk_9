@@ -1,0 +1,22 @@
+.webcam-capture-container {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+  }
+  
+  .webcam-video, .webcam-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .action-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    font-size: 2em;
+  }
+  
