@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
-import * as drawingUtils from '@mediapipe/drawing_utils';
+import * as drawingUtils from '@mediapipe/drawing_utils'; // drawingUtils 모듈 임포트
 import '../styles/WebcamCapture.css';
 
 const WebcamCapture = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [action, setAction] = useState('?');
+  const [action, setAction] = useState('손 모양을 감지 중...');
 
   useEffect(() => {
     const hands = new Hands({
@@ -28,11 +28,13 @@ const WebcamCapture = () => {
         results.image, 0, 0, canvasRef.current.width, canvasRef.current.height);
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
-          drawingUtils.drawConnectors(canvasCtx, landmarks, Hands.HAND_CONNECTIONS,
-            { color: '#00FF00', lineWidth: 5 });
-          drawingUtils.drawLandmarks(canvasCtx, landmarks,
-            { color: '#FF0000', lineWidth: 2 });
+          // 손 모양의 관절을 그리는 함수 호출
+          drawingUtils.drawLandmarks(canvasCtx, landmarks, Hands.HAND_CONNECTIONS, // 관절 그리기
+            { color: '#00FF00', lineWidth: 5 }); // 관절 스타일 설정
+          setAction('손을 감지했습니다!');
         }
+      } else {
+        setAction('손 모양을 감지 중...');
       }
       canvasCtx.restore();
     });
