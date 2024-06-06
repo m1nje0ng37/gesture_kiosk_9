@@ -4,15 +4,15 @@ import { OrderContext } from './OrderContext';
 import '../styles/MenuSelection.css';
 
 // 이미지 import
-import americanoImage from './images/icedamericano.png';
-import latteImage from './images/icedlatte.png';
-import lemonadeImage from './images/lemonade.png';
-import strawberrySmoothieImage from './images/smoothie.png';
+import americanoImage from '../images/icedamericano.png';
+import latteImage from '../images/icedlatte.png';
+import lemonadeImage from '../images/lemonade.png';
+import strawberrySmoothieImage from '../images/smoothie.png';
 
-import image1 from './images/1.png';
-import image2 from './images/2.png';
-import image3 from './images/3.png';
-import image4 from './images/4.png';
+import image1 from '../images/1.png';
+import image2 from '../images/2.png';
+import image3 from '../images/3.png';
+import image4 from '../images/4.png';
 
 function MenuSelection() {
   const navigate = useNavigate();
