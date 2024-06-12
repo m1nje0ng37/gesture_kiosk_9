@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Home.css';
 
@@ -6,6 +6,7 @@ function Home() {
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [gesture, setGesture] = useState(''); // 제스처 상태 추가
 
   const startOrder = useCallback(() => {
     navigate('/menu-selection');
@@ -36,6 +37,7 @@ function Home() {
         })
           .then(response => response.json())
           .then(data => {
+            setGesture(data.prediction); // 제스처 상태 업데이트
             if (data.prediction === 'one') {
               startOrder();
             }
@@ -58,6 +60,7 @@ function Home() {
       <button onClick={startOrder} className="start-button">주문하기</button>
       <video ref={videoRef} className="video-feed" width="640" height="480"></video>
       <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas>
+      <p>인식된 제스처: {gesture}</p> {/* 제스처 상태를 화면에 표시 */}
     </div>
   );
 }
