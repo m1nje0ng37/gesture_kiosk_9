@@ -9,6 +9,7 @@ function Home() {
   const [gesture, setGesture] = useState('손 모양을 감지 중...'); // 초기 상태 설정
 
   const startOrder = useCallback(() => {
+    console.log('버튼이 클릭되었습니다.'); // 버튼 클릭 로그
     navigate('/menu-selection');
   }, [navigate]);
 
@@ -25,9 +26,13 @@ function Home() {
     };
 
     const detectGesture = () => {
+      if (!videoRef.current || !canvasRef.current) return;
+
       const context = canvasRef.current.getContext('2d');
       context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasRef.current.toBlob(blob => {
+        if (!blob) return;
+
         const formData = new FormData();
         formData.append('file', blob, 'frame.jpg');
 
@@ -45,6 +50,7 @@ function Home() {
             console.log('서버 응답 데이터:', data); // 서버 응답 데이터를 콘솔에 출력
             setGesture(data.prediction); // 제스처 상태 업데이트
             if (data.prediction === 'one') {
+              console.log('제스처 "one"이 인식되었습니다. 버튼을 클릭합니다.'); // 제스처 인식 로그
               startOrder();
             }
           })
@@ -56,7 +62,7 @@ function Home() {
     };
 
     startVideo();
-    const intervalId = setInterval(detectGesture, 1000);
+    const intervalId = setInterval(detectGesture, 2000); // 간격을 2초로 조절
 
     return () => clearInterval(intervalId);
   }, [startOrder]);
