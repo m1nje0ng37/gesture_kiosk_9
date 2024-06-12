@@ -6,7 +6,7 @@ function Home() {
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [gesture, setGesture] = useState(''); // 제스처 상태 추가
+  const [gesture, setGesture] = useState('손 모양을 감지 중...'); // 초기 상태 설정
 
   const startOrder = useCallback(() => {
     navigate('/menu-selection');
@@ -20,7 +20,7 @@ function Home() {
           videoRef.current.play();
         })
         .catch(err => {
-          console.error("Error accessing webcam: ", err);
+          console.error("웹캠 접근 에러: ", err);
         });
     };
 
@@ -35,15 +35,22 @@ function Home() {
           method: 'POST',
           body: formData
         })
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('네트워크 응답이 올바르지 않습니다.');
+            }
+            return response.json();
+          })
           .then(data => {
+            console.log('서버 응답 데이터:', data); // 서버 응답 데이터를 콘솔에 출력
             setGesture(data.prediction); // 제스처 상태 업데이트
             if (data.prediction === 'one') {
               startOrder();
             }
           })
           .catch(err => {
-            console.error('Error predicting gesture: ', err);
+            console.error('제스처 예측 에러: ', err);
+            setGesture('제스처 예측 에러'); // 에러 메시지를 상태로 설정
           });
       }, 'image/jpeg');
     };
