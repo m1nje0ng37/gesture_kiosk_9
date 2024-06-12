@@ -1,3 +1,5 @@
+# app/model/gesture_model.py
+
 import tensorflow as tf
 import numpy as np
 
@@ -15,3 +17,6 @@ class GestureModel:
         }
         
         return gesture_map.get(gesture_index, "unknown")
+
+# 인스턴스 생성
+gesture_model_instance = GestureModel()

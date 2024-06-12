@@ -1,21 +1,29 @@
-from fastapi import APIRouter, File, UploadFile
-from app.model.gesture_model import GestureModel
-from PIL import Image
+from fastapi import APIRouter
+import tensorflow as tf
 import numpy as np
 
 router = APIRouter()
 
-model = GestureModel()
+@router.get("/")
+async def read_root():
+    return {"message": "Hello World"}
 
-@router.post("/predict-gesture")
-async def predict_gesture(file: UploadFile = File(...)):
-    # 업로드된 이미지 파일 처리
-    image = Image.open(file.file)
-    image = image.convert("RGB")
-    image = image.resize((224, 224))  # 모델에 맞는 크기로 조정
-    image_array = np.array(image) / 255.0
-    image_array = np.expand_dims(image_array, axis=0)
+class GestureModel:
+    def __init__(self):
+        self.model = tf.keras.models.load_model('app/model/model.keras')
     
-    # 모델 예측
-    prediction = model.predict(image_array)
-    return {"prediction": prediction}
+    def predict(self, image_array):
+        predictions = self.model.predict(image_array)
+        gesture_index = np.argmax(predictions, axis=1)[0]
+        
+        gesture_map = {
+            0: 'one',
+            # Add other gesture mappings here
+        }
+        
+        return gesture_map.get(gesture_index, "unknown")
+
+# 인스턴스 생성
+gesture_model_instance = GestureModel()
+
+print("app.routes 모듈이 로드되었습니다")
