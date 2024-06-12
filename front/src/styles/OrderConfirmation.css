@@ -1,0 +1,56 @@
+.order-confirmation-container {
+  width: 90vw;
+  height: 60vw;
+  max-height: 90vh;
+  max-width: 60vh;
+  border: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2em;
+}
+
+.confirmation-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 20px 80px;
+  font-size: 1.2em;
+  color: white;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 80%;
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  display: flex; /* Flexbox를 사용하여 수직 및 수평 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+@media (max-width: 600px) {
+  h2 {
+    font-size: 1.5em;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    width: 90%;
+  }
+}
