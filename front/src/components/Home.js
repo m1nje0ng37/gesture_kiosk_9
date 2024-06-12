@@ -6,10 +6,11 @@ function Home() {
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [gesture, setGesture] = useState('손 모양을 감지 중...'); // 초기 상태 설정
+  const [gesture, setGesture] = useState('손 모양을 감지 중...');
+  const [showPopup, setShowPopup] = useState(false);
 
   const startOrder = useCallback(() => {
-    console.log('버튼이 클릭되었습니다.'); // 버튼 클릭 로그
+    console.log('버튼이 클릭되었습니다.');
     navigate('/menu-selection');
   }, [navigate]);
 
@@ -47,33 +48,60 @@ function Home() {
             return response.json();
           })
           .then(data => {
-            console.log('서버 응답 데이터:', data); // 서버 응답 데이터를 콘솔에 출력
-            setGesture(data.prediction); // 제스처 상태 업데이트
+            console.log('서버 응답 데이터:', data);
+            setGesture(data.prediction);
             if (data.prediction === 'one') {
-              console.log('제스처 "one"이 인식되었습니다. 버튼을 클릭합니다.'); // 제스처 인식 로그
-              startOrder();
+              console.log('제스처 "one"이 인식되었습니다. 팝업을 띄웁니다.');
+              setShowPopup(true);
             }
           })
           .catch(err => {
             console.error('제스처 예측 에러: ', err);
-            setGesture('제스처 예측 에러'); // 에러 메시지를 상태로 설정
+            setGesture('제스처 예측 에러');
           });
       }, 'image/jpeg');
     };
 
     startVideo();
-    const intervalId = setInterval(detectGesture, 2000); // 간격을 2초로 조절
+    const intervalId = setInterval(detectGesture, 2000);
 
     return () => clearInterval(intervalId);
-  }, [startOrder]);
+  }, []);
+
+  const handlePopupConfirm = () => {
+    setShowPopup(false);
+    startOrder();
+  };
+
+  const handlePopupCancel = () => {
+    setShowPopup(false);
+  };
 
   return (
     <div className="home-container">
       <h1>Welcome to the Cafe</h1>
-      <button onClick={startOrder} className="start-button">주문하기</button>
+      <button 
+        onClick={() => {
+          console.log('버튼 클릭 이벤트 발생');
+          startOrder();
+        }} 
+        className="start-button"
+      >
+        주문하기
+      </button>
       <video ref={videoRef} className="video-feed" width="640" height="480"></video>
       <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas>
-      <p>인식된 제스처: {gesture}</p> {/* 제스처 상태를 화면에 표시 */}
+      <p>인식된 제스처: {gesture}</p>
+
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            <p>one 제스처를 취하셨습니다. 맞나요?</p>
+            <button onClick={handlePopupConfirm}>예</button>
+            <button onClick={handlePopupCancel}>아니오</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
