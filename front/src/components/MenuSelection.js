@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { OrderContext } from './OrderContext';
 import '../styles/MenuSelection.css';
@@ -20,12 +20,8 @@ function MenuSelection() {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-  useEffect(() => {
-    const text = "어떤걸 주문하시겠습니까? 일번 아메리카노, 이번 라떼, 삼번 레몬에이드, 사번 딸기스무디";
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'ko-KR'; // 한국어 설정
-    window.speechSynthesis.speak(speech);
-  }, []);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const handleOrder = (menu) => {
     setSelectedMenu(menu);
@@ -42,6 +38,68 @@ function MenuSelection() {
     setSelectedMenu(null);
   };
 
+  const detectGesture = () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const context = canvasRef.current.getContext('2d');
+    context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+    canvasRef.current.toBlob(blob => {
+      if (!blob) return;
+
+      const formData = new FormData();
+      formData.append('file', blob, 'frame.jpg');
+
+      fetch('http://localhost:8000/predict-gesture', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('네트워크 응답이 올바르지 않습니다.');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('서버 응답 데이터:', data);
+          if (data.prediction === 'one') {
+            handleOrder('아메리카노');
+          } else if (data.prediction === 'two') {
+            handleOrder('라떼');
+          } else if (data.prediction === 'three') {
+            handleOrder('레몬에이드');
+          }
+        })
+        .catch(err => {
+          console.error('제스처 예측 에러: ', err);
+        });
+    }, 'image/jpeg');
+  };
+
+  useEffect(() => {
+    const startVideo = () => {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+        })
+        .catch(err => {
+          console.error("웹캠 접근 에러: ", err);
+        });
+    };
+
+    startVideo();
+    const intervalId = setInterval(detectGesture, 2000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const text = "어떤걸 주문하시겠습니까? 일번 아메리카노, 이번 라떼, 삼번 레몬에이드, 사번 딸기스무디";
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'ko-KR'; // 한국어 설정
+    window.speechSynthesis.speak(speech);
+  }, []);
+
   return (
     <div className="menu-selection-container">
       <h2>주문하기</h2>
@@ -49,24 +107,23 @@ function MenuSelection() {
         <button onClick={() => handleOrder('아메리카노')}>
           <img src={americanoImage} alt="아메리카노" className="menu-image" />
           <span className="menu-text">아메리카노</span>
-          <img src={image1} alt="1" className="side-image" />
         </button>
         <button onClick={() => handleOrder('라떼')}>
           <img src={latteImage} alt="라떼" className="menu-image" />
           <span className="menu-text">라떼</span>
-          <img src={image2} alt="2" className="side-image" />
         </button>
         <button onClick={() => handleOrder('레몬에이드')}>
           <img src={lemonadeImage} alt="레몬에이드" className="menu-image" />
           <span className="menu-text">레몬에이드</span>
-          <img src={image3} alt="3" className="side-image" />
         </button>
         <button onClick={() => handleOrder('딸기스무디')}>
           <img src={strawberrySmoothieImage} alt="딸기스무디" className="menu-image" />
           <span className="menu-text">딸기스무디</span>
-          <img src={image4} alt="4" className="side-image" />
         </button>
       </div>
+
+      <video ref={videoRef} className="video-feed" width="640" height="480"></video>
+      <canvas ref={canvasRef} width="640" height="480" style={{ display: 'none' }}></canvas>
 
       {isPopupVisible && (
         <div className="popup-overlay">
