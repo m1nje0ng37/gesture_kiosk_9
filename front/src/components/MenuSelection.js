@@ -9,11 +9,6 @@ import latteImage from '../images/icedlatte.png';
 import lemonadeImage from '../images/lemonade.png';
 import strawberrySmoothieImage from '../images/smoothie.png';
 
-import image1 from '../images/1.png';
-import image2 from '../images/2.png';
-import image3 from '../images/3.png';
-import image4 from '../images/4.png';
-
 function MenuSelection() {
   const navigate = useNavigate();
   const { addToOrder } = useContext(OrderContext);
@@ -67,6 +62,12 @@ function MenuSelection() {
             handleOrder('라떼');
           } else if (data.prediction === 'three') {
             handleOrder('레몬에이드');
+          } else if (data.prediction === 'four') {
+            handleOrder('딸기스무디');
+          } else if (data.prediction === 'good' && isPopupVisible) {
+            confirmOrder();
+          } else if (data.prediction === 'bad' && isPopupVisible) {
+            cancelOrder();
           }
         })
         .catch(err => {
@@ -91,7 +92,7 @@ function MenuSelection() {
     const intervalId = setInterval(detectGesture, 2000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isPopupVisible]);
 
   useEffect(() => {
     const text = "어떤걸 주문하시겠습니까? 일번 아메리카노, 이번 라떼, 삼번 레몬에이드, 사번 딸기스무디";
@@ -131,8 +132,8 @@ function MenuSelection() {
             <h3>선택 확인</h3>
             <p>{selectedMenu}를 주문하시겠습니까?</p>
             <div className="popup-buttons">
-              <button onClick={confirmOrder}>예</button>
-              <button onClick={cancelOrder}>아니오</button>
+              <button onClick={confirmOrder}>확인</button>
+              <button onClick={cancelOrder}>취소</button>
             </div>
           </div>
         </div>

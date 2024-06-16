@@ -50,8 +50,8 @@ function Home() {
           .then(data => {
             console.log('서버 응답 데이터:', data);
             setGesture(data.prediction);
-            if (data.prediction === 'one') {
-              console.log('제스처 "one"이 인식되었습니다. 팝업을 띄웁니다.');
+            if (data.prediction === 'good') {
+              console.log('제스처 "good"이 인식되었습니다. 팝업을 띄웁니다.');
               setShowPopup(true);
             }
           })
@@ -96,7 +96,7 @@ function Home() {
       {showPopup && (
         <div className="popup">
           <div className="popup-content">
-            <p>one 제스처를 취하셨습니다. 맞나요?</p>
+            <p>good 제스처를 취하셨습니다. 맞나요?</p>
             <button onClick={handlePopupConfirm}>예</button>
             <button onClick={handlePopupCancel}>아니오</button>
           </div>
