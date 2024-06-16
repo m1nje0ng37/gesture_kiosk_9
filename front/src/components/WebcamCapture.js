@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Hands } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import * as drawingUtils from '@mediapipe/drawing_utils';
-import * as mpHands from '@mediapipe/hands';
 import '../styles/WebcamCapture.css';
 
 const WebcamCapture = () => {
@@ -25,12 +24,13 @@ const WebcamCapture = () => {
       const canvasCtx = canvasRef.current.getContext('2d');
       canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasCtx.drawImage(results.image, 0, 0, canvasRef.current.width, canvasRef.current.height);
-      if (results.multiHandLandmarks) {
+      
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         for (const landmarks of results.multiHandLandmarks) {
-          drawingUtils.drawConnectors(canvasCtx, landmarks, mpHands.HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
+          drawingUtils.drawConnectors(canvasCtx, landmarks, Hands.HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
           drawingUtils.drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
-          setAction('손을 감지했습니다!');
         }
+        setAction('손을 감지했습니다!');
       } else {
         setAction('손 모양을 감지 중...');
       }

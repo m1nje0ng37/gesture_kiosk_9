@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hand Gesture Recognition</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+</head>
+<body>
+    <video id="video" width="640" height="480" autoplay></video>
+    <script>
+        const videoElement = document.getElementById('video');
+
+        const hands = new Hands({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }});
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults(onResults);
+
+        const camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+        camera.start();
+
+        async function onResults(results) {
+            console.log('Results:', results);
+            if (results.multiHandLandmarks.length > 0) {
+                console.log('Hand landmarks detected:', results.multiHandLandmarks[0]);
+                const landmarks = results.multiHandLandmarks[0];
+                // landmarks 데이터를 백엔드로 전송
+                try {
+                    const response = await fetch('/api/gesture', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(landmarks),
+                    });
+                    const data = await response.json();
+                    console.log('Response from server:', data);
+                    if (data.gesture === 'good') {
+                        document.getElementById('myButton').click();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            } else {
+                console.log('No hand landmarks detected.');
+            }
+        }
+        
+    </script>
+    <button id="myButton" onclick="alert('Button Clicked!')">Click Me</button>
+</body>
+</html>
